@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>食材拆分复制</title>
+  <style>
+    /* 极简样式 */
+    body { 
+      font-family: sans-serif; 
+      padding: 1em; 
+      max-width: 480px; 
+      margin: auto;
+    }
+    input, button {
+      font-size: 1em;
+      padding: 0.5em;
+      margin-bottom: 0.5em;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+    }
+    .ing-btn {
+      flex: 1 0 auto;
+      padding: 0.5em 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #f9f9f9;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <input id="inputText" placeholder="输入食材，用中文逗号分隔" />
+  <button id="genBtn">生成按钮</button>
+  <div id="buttons"></div>
+
+  <script>
+    const input = document.getElementById('inputText');
+    const genBtn = document.getElementById('genBtn');
+    const container = document.getElementById('buttons');
+
+    genBtn.addEventListener('click', () => {
+      container.innerHTML = '';
+      const items = input.value
+        .split('，')               // 按中文逗号拆分
+        .map(s => s.trim())
+        .filter(s => s);
+      items.forEach(text => {
+        const btn = document.createElement('button');
+        btn.textContent = text;
+        btn.className = 'ing-btn';
+        btn.addEventListener('click', () => {
+          navigator.clipboard.writeText(text)
+            .then(() => { /* 可加入提示效果 */ })
+            .catch(err => console.error('复制失败', err));
+        });
+        container.appendChild(btn);
+      });
+    });
+  </script>
+
+</body>
+</html>
